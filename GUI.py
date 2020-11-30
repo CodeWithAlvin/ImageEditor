@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter.filedialog import askopenfile
 import os 
 from PIL import ImageTk,Image
-
+from Backed import * 
 
 
 class GUI(Tk):
@@ -13,25 +13,7 @@ class GUI(Tk):
 		self.title("Alvin's PhotoShop")
 		self.sc_height=self.winfo_screenheight()
 		self.sc_width=self.winfo_screenwidth()
-	 	
-	def Menu(self):
-		#=========creating main menu=========#
-		self.mainMenu=Menu(self)
-		
-		#========creating sub menus==========#
-		self.m1=Menu(self.mainMenu)
-
-		self.mainMenu.add_cascade(label="Files",menu=self.m1)
-		self.mainMenu.add_command(label="Export")
-
-		#====adding command in menu m1=====#
-		self.m1.add_command(label="Open",command=self.HackImage)
-		self.m1.add_command(label="Settings")
-		self.m1.add_command(label="Clear",command=lambda: canvas.delete("all"))
-		
-		#=========configing Menu===========#
-		self.config(menu=self.mainMenu)
-	
+	 			
 	def CanvasWindow(self):
 		self.canvas=Canvas(self,width=1040,height=1700,bg="grey")	
 		self.canvas.pack(fill='x',padx=20,pady=20)
@@ -39,24 +21,24 @@ class GUI(Tk):
 	def EditingBar(self):
 		#=========creating Editing menu=========#
 		self.EditingMenu=Menu(self)
-		
-		#========creating sub menus==========#
-		self.E1=Menu(self.EditingMenu)
-
-		self.EditingMenu.add_command(label="Crop")
-		self.EditingMenu.add_cascade(label="Contrast",menu=self.E1)
-		self.EditingMenu.add_cascade(label="Brightness",menu=self.E1)
-		self.EditingMenu.add_cascade(label="Sharpness",menu=self.E1)
-		self.EditingMenu.add_cascade(label="Blur",menu=self.E1)
-			
-
-		#====adding command in menu m1=====#
-		self.E1.add_command(label="Open",)
-		self.E1.add_command(label="Settings")
-		self.E1.add_command(label="Clear")
-		
+		self.EditingMenu.add_command(label="Open",command=self.HackImage)
+		self.EditingMenu.add_command(label="Crop",command=lambda:self.OpenScale("Crop"))
+		self.EditingMenu.add_command(label="Contrast",command=lambda:self.OpenScale("Contrast"))
+		self.EditingMenu.add_command(label="Brightness",command=lambda:self.OpenScale("Brightness"))
+		self.EditingMenu.add_command(label="Sharpness",command=lambda:self.OpenScale("Sharpness"))
+		self.EditingMenu.add_command(label="Blur",command=lambda:self.OpenScale("Blur"))
+		self.EditingMenu.add_command(label="Clear")					
 		#=========configing Menu===========#
 		self.config(menu=self.EditingMenu)	
+		
+	def OpenScale(self,name):
+		try:
+			self.scale.destroy()
+		except:
+			None
+		self.scale=Scale(self,from_=-10,to=10,orient=HORIZONTAL)
+		self.scale.pack(anchor="n",ipadx=840,side="top")
+		#self.scale.bind("<Motion>",lambda event:
 	
 	#Functions 
 	def HackImage(self):	
@@ -69,11 +51,10 @@ class GUI(Tk):
 
 if __name__=="__main__":
 	app=GUI()
-	
+		
 	#runnings methods
-	app.Menu()
-	app.CanvasWindow()
 	app.EditingBar()
+	app.CanvasWindow()
+	
 	#running mainloop
 	app.mainloop()
-	
