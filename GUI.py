@@ -19,30 +19,32 @@ class GUI(Tk):
 		self.sc_width=self.winfo_screenwidth()
 	 			
 	def CanvasWindow(self):
-		self.canvas=Canvas(self,width=1030,height=1700,bg="grey")	
+		self.canvas=Canvas(self,width=1030,height=1600,bg="grey")	
 		self.canvas.pack(fill='x',padx=20,pady=20)
 		
 	def EditingBar(self):
 		#=========creating Editing menu=========#
 		self.EditingMenu=Menu(self)
-		self.EditingMenu.add_command(label="Open",command=self.HackImage)
+		self.EditingMenu.add_command(label="Open",command=self.OpenPanel)
 		self.EditingMenu.add_command(label="Crop",command=lambda:self.OpenScale("Crop"))
 		self.EditingMenu.add_command(label="Contrast",command=lambda:self.OpenScale("Contrast"))
 		self.EditingMenu.add_command(label="Brightness",command=lambda:self.OpenScale("Brightness"))
 		self.EditingMenu.add_command(label="Sharpness",command=lambda:self.OpenScale("Sharpness"))
 		self.EditingMenu.add_command(label="Clear")
-		self.EditingMenu.add_command(label="Save",command=lambda : Save(image=self.pic,path=self.export_path,originalSize=[self.width,self.height]))			
+		self.EditingMenu.add_command(label="Save",command=lambda : Save(image=self.pic,path=self.export_path,originalSize=[self.width,self.height]))		
 		#=========configing Menu===========#
 		self.config(menu=self.EditingMenu)	
 		
 	def OpenScale(self,name):
 		try:
 			self.scale.destroy()
+			self.btn.destroy()
 		except:
 			None
 		self.scale=Scale(self,from_=-10,to=10,orient=HORIZONTAL)
+		self.btn=Button(text="Update",command=lambda : self.CallBackend(name))
 		self.scale.pack(anchor="n",ipadx=840,side="top")
-		self.scale.bind("<Motion>",lambda event : self.CallBackend(name))
+		self.btn.pack()
 	
 		
 	def CallBackend(self,name):
@@ -54,31 +56,34 @@ class GUI(Tk):
 		 	im=ManualEdits(self.pic).Sharpness(self.scale.get())
 		 elif name=="Brightness":
 		 	im=ManualEdits(self.pic).Brightness(self.scale.get())
-		 self.img=im
-		 self.canvas.update()
-		
-		
-		
-	#Functions 
-	def HackImage(self):	
-		self.image=askopenfile(mode='r', filetypes=[('Select an Image', '.jpg  .png .jpeg')])
-		self.pic=Image.open(self.image.name)
+		 print(im)
+		 self.ShowImage(im)
+		 
+		 
+	def ShowImage(self,img):
+		if type(img) == str:
+			self.pic=Image.open(self.image)
+		else:
+			self.pic=img
 		self.img = ImageTk.PhotoImage(self.Resize(self.pic))
 		self.canvas.create_image((self.sc_width-80)/2,(self.sc_height-380)/2,image=self.img)
 
+	def OpenPanel(self):
+		self.image=askopenfile(mode='r', filetypes=[('Select an Image', '.jpg  .png .jpeg')]).name
+		self.ShowImage(str(self.image))
 		
 	def Resize(self,image):
 		#resizing without losing aspect ratio of image to fit frame
 		self.width,self.height=image.size
 		new_width=self.width
 		new_height=self.height
-		if self.width>1030 and self.height>1700:
+		if self.width>1030 or self.height>1600:
 			if self.width > self.height :
 				new_width=1030
 				x=1030/self.width
 				new_height=self.height*x
 			else:
-				new_height=1700
+				new_height=1600
 				x=1700/self.height
 				new_width=self.width*x
 		new_image=image.resize((int(new_width),int(new_height)),Image.ANTIALIAS)
