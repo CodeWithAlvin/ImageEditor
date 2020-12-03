@@ -6,23 +6,23 @@ class ManualEdits:
 		self.image=image
 		
 	def Brightness(self,value):
-		Middle=ImageEnhance.Brightness(self.image)
-		final=Middle.enhance(value)
+		initail=ImageEnhance.Brightness(self.image)
+		final=initail.enhance(value)
 		return final
 
 	def Sharpness(self,value):
-		Middle=ImageEnhance.Sharpness(self.image)
-		final=Middle.enhance(value)
+		initail=ImageEnhance.Sharpness(self.image)
+		final=initail.enhance(value)
 		return final		
 	
 	def Color(self,value):
-		Middle=ImageEnhance.Color(self.image)
-		final=Middle.enhance(value)
+		initail=ImageEnhance.Color(self.image)
+		final=initail.enhance(value)
 		return final
 
 	def Contrast(self,value):
-		Middle=ImageEnhance.Contrast(self.image)
-		final=Middle.enhance(value)
+		initail=ImageEnhance.Contrast(self.image)
+		final=initail.enhance(value)
 		return final
 
 
