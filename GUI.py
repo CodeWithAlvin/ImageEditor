@@ -85,7 +85,7 @@ class GUI(Tk):
 				new_height=self.height*x
 			else:
 				new_height=1600
-				x=1700/self.height
+				x=1600/self.height
 				new_width=self.width*x
 		new_image=image.resize((int(new_width),int(new_height)),Image.ANTIALIAS)
 		return new_image
