@@ -30,7 +30,8 @@ class GUI(Tk):
 		self.EditingMenu.add_command(label="Contrast",command=lambda:self.OpenScale("Contrast"))
 		self.EditingMenu.add_command(label="Brightness",command=lambda:self.OpenScale("Brightness"))
 		self.EditingMenu.add_command(label="Sharpness",command=lambda:self.OpenScale("Sharpness"))
-		self.EditingMenu.add_command(label="Clear")
+		self.EditingMenu.add_command(label="Clear",command=lambda:self.ShowImage(self.imgpath))
+		self.EditingMenu.add_command(label="Filters")
 		self.EditingMenu.add_command(label="Save",command=lambda : Save(image=self.pic,path=self.export_path,originalSize=[self.width,self.height]))		
 		#=========configing Menu===========#
 		self.config(menu=self.EditingMenu)	
@@ -41,36 +42,36 @@ class GUI(Tk):
 			self.btn.destroy()
 		except:
 			None
-		self.scale=Scale(self,from_=-10,to=10,orient=HORIZONTAL)
+		self.scale=Scale(self,from_=0,to=10,orient=HORIZONTAL)
 		self.btn=Button(text="Update",command=lambda : self.CallBackend(name))
 		self.scale.pack(anchor="n",ipadx=840,side="top")
+		self.scale.set(5)
 		self.btn.pack()
 	
 		
 	def CallBackend(self,name):
 		 if name=="Contrast":
-		 	im=ManualEdits(self.pic).Contrast(self.scale.get())
+		 	im=ManualEdits(self.pic).Contrast(self.scale.get()/5)
 		 elif name=="Color":
-		 	im=ManualEdits(self.pic).Color(self.scale.get())
+		 	im=ManualEdits(self.pic).Color(self.scale.get()/5)
 		 elif name=="Sharpness":
-		 	im=ManualEdits(self.pic).Sharpness(self.scale.get())
+		 	im=ManualEdits(self.pic).Sharpness(self.scale.get()/5)
 		 elif name=="Brightness":
-		 	im=ManualEdits(self.pic).Brightness(self.scale.get())
-		 print(im)
+		 	im=ManualEdits(self.pic).Brightness(self.scale.get()/5)
 		 self.ShowImage(im)
 		 
 		 
 	def ShowImage(self,img):
 		if type(img) == str:
-			self.pic=Image.open(self.image)
+			self.pic=Image.open(img)
 		else:
 			self.pic=img
 		self.img = ImageTk.PhotoImage(self.Resize(self.pic))
-		self.canvas.create_image((self.sc_width-80)/2,(self.sc_height-380)/2,image=self.img)
+		self.canvas.create_image((self.sc_width-80)/2,(self.sc_height-430)/2,image=self.img)
 
 	def OpenPanel(self):
-		self.image=askopenfile(mode='r', filetypes=[('Select an Image', '.jpg  .png .jpeg')]).name
-		self.ShowImage(str(self.image))
+		self.imgpath=askopenfile(mode='r', filetypes=[('Select an Image', '.jpg  .png .jpeg')]).name
+		self.ShowImage(str(self.imgpath))
 		
 	def Resize(self,image):
 		#resizing without losing aspect ratio of image to fit frame
