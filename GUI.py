@@ -6,6 +6,9 @@ from Backend import *
 
 class GUI(Tk):
 	def __init__(self):
+		#setting some variables
+		self.VALUES={'CONTRAST':5,'COLOR':5,'BRIGHTNESS':5,'SHARPNESS':5}
+		
 		super().__init__()
 		self.export_path="/storage/emulated/0/AlvinPhotoShop/"
 		try:
@@ -26,16 +29,17 @@ class GUI(Tk):
 		#=========creating Editing menu=========#
 		self.EditingMenu=Menu(self)
 		self.EditingMenu.add_command(label="Open",command=self.OpenPanel)
-		self.EditingMenu.add_command(label="Crop",command=lambda:self.OpenScale("Crop"))
+		self.EditingMenu.add_command(label="Color",command=lambda:self.OpenScale("Color"))
 		self.EditingMenu.add_command(label="Contrast",command=lambda:self.OpenScale("Contrast"))
 		self.EditingMenu.add_command(label="Brightness",command=lambda:self.OpenScale("Brightness"))
 		self.EditingMenu.add_command(label="Sharpness",command=lambda:self.OpenScale("Sharpness"))
 		self.EditingMenu.add_command(label="Clear",command=lambda:self.ShowImage(self.imgpath))
 		self.EditingMenu.add_command(label="Filters")
-		self.EditingMenu.add_command(label="Save",command=lambda : Save(image=self.pic,path=self.export_path,originalSize=[self.width,self.height]))		
+		self.EditingMenu.add_command(label="Save",command=lambda : self.Save(image=self.pic,path=self.export_path,originalSize=[self.width,self.height]))		
 		#=========configing Menu===========#
 		self.config(menu=self.EditingMenu)	
-		
+	
+	#Handling Scale Here
 	def OpenScale(self,name):
 		try:
 			self.scale.destroy()
@@ -45,34 +49,41 @@ class GUI(Tk):
 		self.scale=Scale(self,from_=0,to=10,orient=HORIZONTAL)
 		self.btn=Button(text="Update",command=lambda : self.CallBackend(name))
 		self.scale.pack(anchor="n",ipadx=840,side="top")
-		self.scale.set(5)
+		self.scale.set(self.VALUES.get(name.upper()))
 		self.btn.pack()
 	
-		
+	#Calling the Backend to Process Image
 	def CallBackend(self,name):
-		 if name=="Contrast":
-		 	im=ManualEdits(self.pic).Contrast(self.scale.get()/5)
-		 elif name=="Color":
-		 	im=ManualEdits(self.pic).Color(self.scale.get()/5)
-		 elif name=="Sharpness":
-		 	im=ManualEdits(self.pic).Sharpness(self.scale.get()/5)
-		 elif name=="Brightness":
-		 	im=ManualEdits(self.pic).Brightness(self.scale.get()/5)
-		 self.ShowImage(im)
+		 #getting value from dict
+		 self.VALUES[name.upper()]=self.scale.get()
+		 #Running Editors for image
+		 img=Image.open(self.imgpath)
+		 first=ManualEdits(img).Contrast(self.VALUES.get('CONTRAST')/5)
+		 second=ManualEdits(first).Color(self.VALUES.get('COLOR')/5)
+		 third=ManualEdits(second).Sharpness(self.VALUES.get('SHARPNESS')/5)
+		 fourth=ManualEdits(third).Brightness(self.VALUES.get('BRIGHTNESS')/5)
+		 self.ShowImage(fourth)
 		 
-		 
+	#Halding Image Showing
 	def ShowImage(self,img):
 		if type(img) == str:
 			self.pic=Image.open(img)
+			#Doing all the value as defualt
+			for i in self.VALUES.keys():
+				self.VALUES[i]=5
 		else:
 			self.pic=img
 		self.img = ImageTk.PhotoImage(self.Resize(self.pic))
 		self.canvas.create_image((self.sc_width-80)/2,(self.sc_height-430)/2,image=self.img)
-
+		
+	
+	#Opens Panel for Upload Image
 	def OpenPanel(self):
 		self.imgpath=askopenfile(mode='r', filetypes=[('Select an Image', '.jpg  .png .jpeg')]).name
 		self.ShowImage(str(self.imgpath))
 		
+	
+	#Resizing Image to fit frame
 	def Resize(self,image):
 		#resizing without losing aspect ratio of image to fit frame
 		self.width,self.height=image.size
@@ -90,13 +101,14 @@ class GUI(Tk):
 		new_image=image.resize((int(new_width),int(new_height)),Image.ANTIALIAS)
 		return new_image
 
+	# save the image
+	def Save(self,image,path,originalSize):
+		try:
+			new_image=image.resize((int(originalSize[0]),int(originalSize[1])),Image.ANTIALIAS)
+			new_image.save(path+str(time.time()).replace(".","")+".jpg")
+			#Pops up message
+			Message(self,textvariable="successfully saved your image",relief=RAISED).pack()
+		except:
+			Message(self,textvariable="An error Occured Please try again",relief=RAISED).pack()
+			
 
-if __name__=="__main__":
-	app=GUI()
-		
-	#runnings methods
-	app.EditingBar()
-	app.CanvasWindow()
-	
-	#running mainloop
-	app.mainloop()

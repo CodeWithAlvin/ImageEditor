@@ -6,30 +6,37 @@ class ManualEdits:
 		self.image=image
 		
 	def Brightness(self,value):
-		initail=ImageEnhance.Brightness(self.image)
-		final=initail.enhance(value)
-		return final
+		try:
+			initail=ImageEnhance.Brightness(self.image)
+			final=initail.enhance(value)
+			return final
+		except:
+			return self.image
 
 	def Sharpness(self,value):
-		initail=ImageEnhance.Sharpness(self.image)
-		final=initail.enhance(value)
-		return final		
+		try:
+			initail=ImageEnhance.Sharpness(self.image)
+			final=initail.enhance(value)
+			return final	
+		except:
+			return self.image	
 	
 	def Color(self,value):
-		initail=ImageEnhance.Color(self.image)
-		final=initail.enhance(value)
-		return final
+		try:
+			initail=ImageEnhance.Color(self.image)
+			final=initail.enhance(value)
+			return final
+		except:
+			return self.image
 
 	def Contrast(self,value):
-		initail=ImageEnhance.Contrast(self.image)
-		final=initail.enhance(value)
-		return final
+		try:
+			initail=ImageEnhance.Contrast(self.image)
+			final=initail.enhance(value)
+			return final
+		except:
+			return self.image
 
-
-class Save:
-	def __init__(self,image,path,originalSize):
-		new_image=image.resize((int(originalSize[0]),int(originalSize[1])),Image.ANTIALIAS)
-		new_image.save(path+str(time.time()).replace(".","")+".jpg")
 
 
 
