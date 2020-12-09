@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.filedialog import askopenfile
+from tkinter import messagebox
 from PIL import ImageTk,Image
 from Backend import * 
 
@@ -107,8 +108,8 @@ class GUI(Tk):
 			new_image=image.resize((int(originalSize[0]),int(originalSize[1])),Image.ANTIALIAS)
 			new_image.save(path+str(time.time()).replace(".","")+".jpg")
 			#Pops up message
-			Message(self,textvariable="successfully saved your image",relief=RAISED).pack()
+			messagebox.showinfo("Success","Your Image have been Saved")
 		except:
-			Message(self,textvariable="An error Occured Please try again",relief=RAISED).pack()
+			messagebox.showinfo("Failed","An error Occured Please try again")
 			
 
