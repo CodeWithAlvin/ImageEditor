@@ -80,7 +80,7 @@ class GUI(Tk):
 	
 	#Opens Panel for Upload Image
 	def OpenPanel(self):
-		self.imgpath=askopenfile(mode='r', filetypes=[('Select an Image', '.jpg  .png .jpeg')]).name
+		self.imgpath=askopenfile(mode='r',title="Choose an Image" ,filetypes=[('Select an Image', '.jpg  .png .jpeg')],initialdir="/storage/emulated/0/").name
 		self.ShowImage(str(self.imgpath))
 		
 	
