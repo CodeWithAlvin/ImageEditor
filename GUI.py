@@ -16,11 +16,11 @@ class GUI(Tk):
 			os.mkdir("/storage/emulated/0/AlvinPhotoShop")
 		except:
 			None
-		self.config(bg="black")
-		self.geometry("1038x1910")		
+		self.config(bg="black")		
 		self.title("Alvin's PhotoShop")
 		self.sc_height=self.winfo_screenheight()
 		self.sc_width=self.winfo_screenwidth()
+                self.geometry(f"{self.sc_width}x{self.sc_height}")
 	 			
 	def CanvasWindow(self):
 		self.canvas=Canvas(self,width=1030,height=1600,bg="grey")	
@@ -103,6 +103,7 @@ class GUI(Tk):
 		return new_image
 
 	# save the image
+
 	def Save(self,image,path,originalSize):
 		try:
 			new_image=image.resize((int(originalSize[0]),int(originalSize[1])),Image.ANTIALIAS)
