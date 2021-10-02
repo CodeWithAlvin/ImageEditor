@@ -20,7 +20,7 @@ class GUI(Tk):
 		self.title("Alvin's PhotoShop")
 		self.sc_height=self.winfo_screenheight()
 		self.sc_width=self.winfo_screenwidth()
-                self.geometry(f"{self.sc_width}x{self.sc_height}")
+		self.geometry = (f"{self.sc_width}x{self.sc_height}")
 	 			
 	def CanvasWindow(self):
 		self.canvas=Canvas(self,width=1030,height=1600,bg="grey")	
